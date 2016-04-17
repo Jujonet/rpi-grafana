@@ -1,16 +1,16 @@
 FROM resin/rpi-raspbian:jessie
 
-ENV GRAFANA_VERSION 3.0.0-beta2
-
 RUN apt-get update && \
-    apt-get install libfontconfig
+    apt-get install curl libfontconfig ca-certificates
 
-ADD package/grafana_${GRAFANA_VERSION}_armhf.deb /tmp/grafana_${GRAFANA_VERSION}_armhf.dep
+RUN curl -s https://packagecloud.io/install/repositories/pithings/rpi/script.deb.sh | bash
+
 RUN mkdir -p /var/lib/grafana
 RUN mkdir -p /var/log/grafana
-RUN dpkg -i /tmp/grafana_${GRAFANA_VERSION}_armhf.dep && \
-  rm /tmp/grafana_${GRAFANA_VERSION}_armhf.dep && \
-  rm -rf /var/lib/apt/lists/*
+
+RUN apt-get install grafana
+
+RUN rm -rf /var/lib/apt/lists/*
 
 EXPOSE 3000
 
